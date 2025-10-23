@@ -1,0 +1,12 @@
+# Build artifacts
+build/
+*.hex
+*.elf
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Arduino backups
+*.ino.*.backup
+*.ino.*.tmp
