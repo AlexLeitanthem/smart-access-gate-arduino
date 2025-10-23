@@ -55,3 +55,8 @@ MIT. See `LICENSE`.
 
 ## Credits
 - Based on the project report "PROJECT REPORT ON SMART ACCESS GATE SYSTEM USING ARDUINO UNO" included in `docs/`.
+## Demo Video
+
+[![Smart Access Gate System Demo](https://img.youtube.com/vi/eSR9oMO9okk/0.jpg)](https://youtube.com/shorts/eSR9oMO9okk?feature=share)
+
+Watch the demo here: https://youtube.com/shorts/eSR9oMO9okk?feature=share
