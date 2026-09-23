@@ -1,6 +1,6 @@
 # Smart Access Gate System (Arduino)
 
-Automated, sensor-based gate with ultrasonic detection, servo actuation, LEDs, buzzer, and 16x2 I2C LCD. Includes a manual override switch. Built for the Arduino Uno.
+Automated, sensor-based gate with ultrasonic detection, servo actuation, LEDs, buzzer, and 16x2 I2C LCD. Includes a manual override switch. Written in Arduino (C/C++) for the Arduino Uno.
 
 > This repo is generated directly from the project report and includes the original PDF in `docs/`. See wiring, code, and testing notes below.  
 
@@ -34,6 +34,30 @@ Automated, sensor-based gate with ultrasonic detection, servo actuation, LEDs, b
 - Opens when object detected within 8 cm, with buzzer + green LED.
 - Auto-closes after ~6 seconds of no detection, with buzzer + red LED.
 - Manual switch toggles open/close and temporarily disables auto mode.
+
+## How it works
+
+### Distance measurement
+`automaticGateControl()` triggers the HC-SR04 by pulling `trigPin` (D9) HIGH for 10 µs, then LOW. `pulseIn(echoPin, HIGH)` measures how long the echo pin stays HIGH — the round-trip travel time of the ultrasonic pulse. The sketch converts that to centimetres:
+
+```cpp
+distance = duration * 0.034 / 2;  // µs × speed of sound (cm/µs) ÷ 2 for round-trip
+```
+
+If `distance <= distanceThreshold` (8 cm), a vehicle is detected and the gate opens.
+
+### Servo control
+`openGate()` and `closeGate()` step the servo in 30° increments (`angleStep`) between `closeAngle` (0°) and `openAngle` (90°), pausing 500 ms per step:
+
+```cpp
+for (int angle = currentAngle; angle <= openAngle; angle += angleStep) {
+    gateServo.write(angle);
+    delay(500);
+}
+```
+
+### Manual override
+The switch on pin A0 uses `INPUT_PULLUP`, so it reads `LOW` when pressed. Each press toggles the `isManualOverrideActive` flag: the first press sets it `true` and opens the gate; the second press clears it and closes the gate. While the flag is `true`, `loop()` bypasses `automaticGateControl()` entirely, leaving the gate under manual control until the switch is pressed again.
 
 ## Directory Layout
 ```
